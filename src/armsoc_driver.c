@@ -109,6 +109,7 @@ enum {
 	OPTION_DRI_NUM_BUF,
 	OPTION_INIT_FROM_FBDEV,
 	OPTION_UMP_LOCK,
+	 OPTION_SW_CURSOR,
 };
 
 /** Supported options. */
@@ -121,6 +122,7 @@ static const OptionInfoRec ARMSOCOptions[] = {
 	{ OPTION_DRI_NUM_BUF, "DRI2MaxBuffers", OPTV_INTEGER, {-1}, FALSE },
 	{ OPTION_INIT_FROM_FBDEV, "InitFromFBDev", OPTV_STRING, {0}, FALSE },
 	{ OPTION_UMP_LOCK,   "UMP_LOCK",   OPTV_BOOLEAN, {0}, FALSE },
+	{ OPTION_SW_CURSOR, "SWcursor", OPTV_BOOLEAN, {0}, FALSE},
 	{ -1,                NULL,         OPTV_NONE,    {0}, FALSE }
 };
 
@@ -1114,6 +1116,10 @@ ARMSOCScreenInit(SCREEN_INIT_ARGS_DECL)
 	if (!miDCInitialize(pScreen, xf86GetPointerScreenFuncs())) {
 		ERROR_MSG("miDCInitialize() failed!");
 		goto fail5;
+	}
+
+	if (xf86ReturnOptValBool(pARMSOC->pOptionInfo, OPTION_SW_CURSOR, FALSE)) {
+		pARMSOC->drmmode_interface->cursor_api = HWCURSOR_API_NONE;
 	}
 
 	/* ignore failures here as we will fall back to software cursor */
