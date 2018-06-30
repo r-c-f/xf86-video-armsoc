@@ -1131,6 +1131,9 @@ ARMSOCScreenInit(SCREEN_INIT_ARGS_DECL)
 	 */
 	pScrn->vtSema = TRUE;
 
+	/* Do some XRandR initialization. Return value is not useful */
+	(void)xf86CrtcScreenInit(pScreen);
+
 	/* Take over the virtual terminal from the console, set the
 	 * desired mode, etc.:
 	 */
@@ -1138,9 +1141,6 @@ ARMSOCScreenInit(SCREEN_INIT_ARGS_DECL)
 		ERROR_MSG("ARMSOCEnterVT() failed!");
 		goto fail6;
 	}
-
-	/* Do some XRandR initialization. Return value is not useful */
-	(void)xf86CrtcScreenInit(pScreen);
 
 	if (!miCreateDefColormap(pScreen)) {
 		ERROR_MSG("Cannot create colormap!");
